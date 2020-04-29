@@ -1,0 +1,8 @@
+[package]
+name = "words-with-letters"
+version = "0.1.0"
+authors = ["Arnaud Gourlay <arnaud.gourlay@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+clap = "2.33.0"
