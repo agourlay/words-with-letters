@@ -1,7 +1,7 @@
 use clap::{value_t, App, Arg};
 use std::path::Path;
 
-pub fn get_args() -> (String, usize, String) {
+pub fn get_args() -> (String, usize, String, bool) {
     let matches = App::new("words-with-letters")
         .version("0.1.0")
         .author("Arnaud Gourlay <arnaud.gourlay@gmail.com>")
@@ -16,7 +16,7 @@ pub fn get_args() -> (String, usize, String) {
         )
         .arg(
             Arg::with_name("dictionaryFile")
-                .help("dictionary file")
+                .help("dictionary file path")
                 .long("dictionaryFile")
                 .short("dl")
                 .takes_value(true)
@@ -29,6 +29,12 @@ pub fn get_args() -> (String, usize, String) {
                 .short("sl")
                 .takes_value(true)
                 .required(true),
+        )
+        .arg(
+            Arg::with_name("verbose")
+                .help("verbose mode for debugging")
+                .long("verbose")
+                .short("v"),
         )
         .get_matches();
 
@@ -48,9 +54,12 @@ pub fn get_args() -> (String, usize, String) {
         panic!("letters is empty")
     }
 
+    let verbose_mode = matches.is_present("verbose");
+
     (
         dictionary_file.to_string(),
         sentence_length,
         letters.to_string(),
+        verbose_mode,
     )
 }
