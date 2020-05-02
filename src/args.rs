@@ -1,7 +1,7 @@
 use clap::{value_t, App, Arg};
 use std::path::Path;
 
-pub fn get_args() -> (String, usize, String, bool) {
+pub fn get_args() -> (String, usize, String, bool, Option<usize>) {
     let matches = App::new("words-with-letters")
         .version("0.1.0")
         .author("Arnaud Gourlay <arnaud.gourlay@gmail.com>")
@@ -31,6 +31,13 @@ pub fn get_args() -> (String, usize, String, bool) {
                 .required(true),
         )
         .arg(
+            Arg::with_name("top")
+                .help("number of result to display")
+                .long("top")
+                .short("t")
+                .takes_value(true),
+        )
+        .arg(
             Arg::with_name("verbose")
                 .help("verbose mode for debugging")
                 .long("verbose")
@@ -56,10 +63,20 @@ pub fn get_args() -> (String, usize, String, bool) {
 
     let verbose_mode = matches.is_present("verbose");
 
+    let top: Option<usize> =  if matches.is_present("top") {
+        let value = value_t!(matches, "top", usize).expect("impossible");
+        if value == 0 {
+            panic!("invalid top - must be a positive integer")
+        } else {
+            Some(value)
+        }
+    } else { None };
+
     (
         dictionary_file.to_string(),
         sentence_length,
         letters.to_string(),
         verbose_mode,
+        top,
     )
 }
