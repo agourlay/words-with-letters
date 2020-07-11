@@ -65,7 +65,7 @@ impl BaseWord {
     }
 
     fn to_sentence(&self, letters: &Vec<char>) -> Sentence {
-        let mut remaining_letters_for_sentence: Vec<char> = letters.clone();
+        let mut remaining_letters_for_sentence: Vec<char> = letters.to_owned();
         for l in self.chars.iter() {
             remove_first(&mut remaining_letters_for_sentence, |rl| rl == l);
         }
