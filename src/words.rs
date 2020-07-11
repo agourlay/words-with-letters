@@ -139,18 +139,30 @@ pub fn sentences_for_letters(
         in_progress_sentences.clear();
     }
 
-    let mut sorted_sentences: Vec<&Sentence> = sentences_found.iter().collect();
+    sentences_found.extend(completed_sentences);
+    let mut sorted_sentences: Vec<(&Sentence, String)> = sentences_found
+        .iter()
+        .map(|s| (s, s.display(false)))
+        .collect();
     sorted_sentences.sort_by(|a, b| {
-        if a.length == b.length {
-            a.display(false).cmp(&b.display(false))
+        let a_length = a.0.length;
+        let b_length = b.0.length;
+        if a_length == b_length {
+            a.1.cmp(&b.1)
         } else {
-            a.length.cmp(&b.length).reverse()
+            a_length.cmp(&b_length).reverse()
         }
     });
 
     let display_sentences: Vec<String> = sorted_sentences
         .iter()
-        .map(|sentence| sentence.display(with_display_unused))
+        .map(|(sentence, display_without_unused)| {
+            if with_display_unused {
+                sentence.display(with_display_unused)
+            } else {
+                display_without_unused.to_string()
+            }
+        })
         .collect();
     display_sentences
 }
