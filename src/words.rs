@@ -50,13 +50,7 @@ impl Sentence {
         } else {
             format!("(unused letters:{:?})", self.remaining_letters)
         };
-        let fused = self.words.iter().fold(String::new(), |acc, w| {
-            if acc.is_empty() {
-                w.clone()
-            } else {
-                format!("{} {}", acc, w)
-            }
-        });
+        let fused = self.words.join(" ");
         if with_unused {
             format!("{} {}", fused, meta)
         } else {
