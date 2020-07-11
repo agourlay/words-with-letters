@@ -7,7 +7,6 @@ struct Sentence {
     words: Vec<String>, // words is expected to be sorted to detect duplicates later on
     remaining_letters: Vec<char>,
     length: usize,
-    max_expansion_reached: bool,
 }
 
 impl Sentence {
@@ -17,7 +16,6 @@ impl Sentence {
             words,
             remaining_letters,
             length,
-            max_expansion_reached: false
         }
     }
 
@@ -27,21 +25,11 @@ impl Sentence {
             words: vec![word],
             remaining_letters,
             length,
-            max_expansion_reached: false
-        }
-    }
-
-    fn mark_as_max_expansion_reached(&self) -> Sentence {
-        Sentence {
-            words: self.words.clone(),
-            remaining_letters: self.remaining_letters.clone(),
-            length: self.length,
-            max_expansion_reached: true
         }
     }
 
     fn is_completed(&self) -> bool {
-        self.max_expansion_reached || self.remaining_letters.is_empty()
+        self.remaining_letters.is_empty()
     }
 
     fn display(&self, with_unused: bool) -> String {
@@ -111,11 +99,10 @@ pub fn sentences_for_letters(
     with_display_unused: bool,
     verbose_mode: bool,
 ) -> Vec<String> {
-    let mut sentences_found: HashSet<Sentence> = words
-        .iter()
-        .map(|w| w.to_sentence(letters))
-        .collect();
+    let mut sentences_found: HashSet<Sentence> =
+        words.iter().map(|w| w.to_sentence(letters)).collect();
     let mut in_progress_sentences: HashSet<Sentence> = HashSet::new();
+    let mut completed_sentences: HashSet<Sentence> = HashSet::new();
 
     // TODO try something cleaner with a fold/scan or recursion instead
     for i in 1..sentence_length_in_words {
@@ -131,6 +118,7 @@ pub fn sentences_for_letters(
             &words,
             &sentences_found,
             &mut in_progress_sentences,
+            &mut completed_sentences,
             verbose_mode,
         );
         // Sneaky swap for the next loop to continue where we left off
@@ -171,6 +159,7 @@ fn expand_sentences_found(
     base_words: &Vec<BaseWord>,
     sentences_found: &HashSet<Sentence>,
     in_progress_sentences: &mut HashSet<Sentence>,
+    completed_sentences: &mut HashSet<Sentence>,
     verbose_mode: bool,
 ) {
     for sentence in sentences_found.iter() {
@@ -203,7 +192,9 @@ fn expand_sentences_found(
             }
         }
         if !expanded {
-            in_progress_sentences.insert(sentence.mark_as_max_expansion_reached());
+            let completed =
+                Sentence::new(sentence.words.clone(), sentence.remaining_letters.clone());
+            completed_sentences.insert(completed);
         }
     }
 }
