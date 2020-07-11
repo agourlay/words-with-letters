@@ -39,7 +39,10 @@ fn main() -> io::Result<()> {
         "Found {} results -- listed sorted by length:\n",
         found.len()
     );
-    let display_nb = top.unwrap_or(found.len());
-    found.iter().take(display_nb).for_each(|r| println!("{}", r));
+    let display_nb = top.unwrap_or_else(|| found.len());
+    found
+        .iter()
+        .take(display_nb)
+        .for_each(|r| println!("{}", r));
     Ok(())
 }

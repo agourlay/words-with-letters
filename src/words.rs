@@ -239,14 +239,20 @@ mod words_with_letters_tests {
     fn word_can_build_from_letters_duplicate_letter() {
         let word = "happy".to_string();
         let chars = vec!['h', 'a', 'p', 'y'];
-        assert_eq!(BaseWord::new(word).word_can_build_from_letters(&chars), false)
+        assert_eq!(
+            BaseWord::new(word).word_can_build_from_letters(&chars),
+            false
+        )
     }
 
     #[test]
     fn word_can_build_from_letters_happy() {
         let word = "happy".to_string();
         let chars = vec!['h', 'a', 'p', 'y', 'p'];
-        assert_eq!(BaseWord::new(word).word_can_build_from_letters(&chars), true)
+        assert_eq!(
+            BaseWord::new(word).word_can_build_from_letters(&chars),
+            true
+        )
     }
 
     #[test]

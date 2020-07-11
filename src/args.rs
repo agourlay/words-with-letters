@@ -63,14 +63,16 @@ pub fn get_args() -> (String, usize, String, bool, Option<usize>) {
 
     let verbose_mode = matches.is_present("verbose");
 
-    let top: Option<usize> =  if matches.is_present("top") {
+    let top: Option<usize> = if matches.is_present("top") {
         let value = value_t!(matches, "top", usize).expect("impossible");
         if value == 0 {
             panic!("invalid top - must be a positive integer")
         } else {
             Some(value)
         }
-    } else { None };
+    } else {
+        None
+    };
 
     (
         dictionary_file.to_string(),
