@@ -15,3 +15,6 @@ quickcheck_macros = "0.9"
 [[bench]]
 name = "my_benchmark"
 harness = false
+
+[profile.release]
+debug = true # necessary for https://github.com/flamegraph-rs/flamegraph
